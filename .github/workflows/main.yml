@@ -26,7 +26,7 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: oryx-build
         with:
-          app-location: ""
+          app-location: "/"
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
