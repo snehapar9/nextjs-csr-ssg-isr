@@ -38,13 +38,14 @@ jobs:
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --development --token=${{ secrets.VERCEL_TOKEN }}   
+        run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }}   
   Deploy-Netlify:
     runs-on: ubuntu-latest
     name : Deploy to Netlify
     env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          publish-dir: '.next'
     steps:
       - name: Install netlify cli
         run: npm install netlify-cli -g
