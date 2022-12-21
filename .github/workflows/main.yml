@@ -42,9 +42,9 @@ jobs:
   netlify-build:
     name: Netlify build
     runs-on: ubuntu-latest
-    # steps:
-    #   - name: Curl request
-    #     run: curl -X POST -d {} https://api.netlify.com/build_hooks/63a18125241d2b63140db12e   
+    steps:
+      - name: Curl request
+        # run: curl -X POST -d {} https://api.netlify.com/build_hooks/63a18125241d2b63140db12e   
 
   # Deploy-Netlify:
   #   runs-on: ubuntu-latest
