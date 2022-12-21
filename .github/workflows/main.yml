@@ -39,12 +39,12 @@ jobs:
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }}  
-  netlify-build:
-    name: Netlify build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Curl request
-        # run: curl -X POST -d {} https://api.netlify.com/build_hooks/63a18125241d2b63140db12e   
+  # netlify-build:
+  #   name: Netlify build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Curl request
+  #       run: curl -X POST -d {} https://api.netlify.com/build_hooks/63a18125241d2b63140db12e   
 
   # Deploy-Netlify:
   #   runs-on: ubuntu-latest
