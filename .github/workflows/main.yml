@@ -1,5 +1,9 @@
 on: 
  workflow_dispatch:
+  inputs:
+   base-image:
+     description: 'Base image'
+     default: 'mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1'
 
 jobs:
   oryx_build_job:
