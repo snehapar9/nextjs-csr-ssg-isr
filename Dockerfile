@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1
+ARG BASE-IMAGE=$1
+FROM BASE-IMAGE
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["sh", "/entrypoint.sh"]
 
