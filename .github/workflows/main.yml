@@ -4,6 +4,9 @@ on:
    base-image:
      description: 'Base image'
      default: 'mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1'
+   application-location:
+      description: 'Application location'
+      default: '/'   
 
 jobs:
   oryx_build_job:
@@ -26,11 +29,17 @@ jobs:
          registry: jamstacktest.azurecr.io
          username: ${{ secrets.AZURE_CLIENT_ID }}
          password: ${{ secrets.AZURE_CLIENT_SECRET }}         
-      - name: Oryx build step
-        uses: ./ # Uses an action in the root directory
-        id: oryx-build
+      # - name: Oryx build step
+      #   uses: ./ # Uses an action in the root directory
+      #   id: oryx-build
+      #   with:
+      #     app-location: "/"
+      - name: Build Docker image
+        uses: flownative/action-docker-build@v1
         with:
-          app-location: "/"
+         image_name: ${{ inputs.base-image }}
+      - name: Oryx build
+        run : oryx build  ${{ inputs.application-location }}   
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
