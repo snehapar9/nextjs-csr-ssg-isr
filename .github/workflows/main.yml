@@ -25,12 +25,20 @@ jobs:
         with: 
          registry: jamstacktest.azurecr.io
          username: ${{ secrets.AZURE_CLIENT_ID }}
-         password: ${{ secrets.AZURE_CLIENT_SECRET }}   
-      - name: Oryx build step
-        uses: ./ # Uses an action in the root directory
-        id: oryx-build
-        with:
-          app-location: "/"
+         password: ${{ secrets.AZURE_CLIENT_SECRET }} 
+      - name: Build
+        run : | 
+              docker pull $inputs.base-image 
+              docker build . ${{ inputs.base_image }}
+      - name: Run
+        run : |
+              docker run ${{ inputs.base_image }} /bin/bash -c 
+              oryx build         
+      # - name: Oryx build step
+      #   uses: ./ # Uses an action in the root directory
+      #   id: oryx-build
+      #   with:
+      #     app-location: "/"
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
