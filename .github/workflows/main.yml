@@ -29,17 +29,11 @@ jobs:
          registry: jamstacktest.azurecr.io
          username: ${{ secrets.AZURE_CLIENT_ID }}
          password: ${{ secrets.AZURE_CLIENT_SECRET }}         
-      # - name: Oryx build step
-      #   uses: ./ # Uses an action in the root directory
-      #   id: oryx-build
-      #   with:
-      #     app-location: "/"
-      - name: Build Docker image
-        uses: flownative/action-docker-build@v1
+      - name: Oryx build step
+        uses: ./ # Uses an action in the root directory
+        id: oryx-build
         with:
-         image_name: ${{ inputs.base-image }}
-      - name: Oryx build
-        run : oryx build  ${{ inputs.application-location }}   
+          app-location: "/"
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
