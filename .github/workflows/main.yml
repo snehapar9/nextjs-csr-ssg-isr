@@ -28,7 +28,14 @@ jobs:
         with: 
          registry: jamstacktest.azurecr.io
          username: ${{ secrets.AZURE_CLIENT_ID }}
-         password: ${{ secrets.AZURE_CLIENT_SECRET }}         
+         password: ${{ secrets.AZURE_CLIENT_SECRET }}   
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+         path: tmp
+         key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+          ${{ runner.OS }}-npm-cache-            
       - name: Oryx build step
         uses: ./ # Uses an action in the root directory
         id: oryx-build
