@@ -64,8 +64,8 @@ jobs:
           context: .
           push: false
           tags: mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1
-          cache-from: type=gha,src=/tmp/.buildx-cache
-          cache-to: type=gha,dest=/tmp/.buildx-cache-new
+          cache-from: type=registry,src=/tmp/.buildx-cache
+          cache-to: type=registry,dest=/tmp/.buildx-cache-new
         # This ugly bit is necessary if you don't want your cache to grow forever
         # until it hits GitHub's limit of 5GB.
         # Temp fix
@@ -148,8 +148,8 @@ jobs:
           context: ./cli-docker
           push: false
           tags: jamstacktest.azurecr.io/oryx/cli-bullseye:v2
-          cache-from: type=gha,src=/tmp/.buildx-cache
-          cache-to: type=gha,dest=/tmp/.buildx-cache-new
+          cache-from: type=registry,src=/tmp/.buildx-cache
+          cache-to: type=registry,dest=/tmp/.buildx-cache-new
         # This ugly bit is necessary if you don't want your cache to grow forever
         # until it hits GitHub's limit of 5GB.
         # Temp fix
