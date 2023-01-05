@@ -145,7 +145,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./cli-docker/Dockerfile
+          context: ./cli-docker
           push: false
           tags: jamstacktest.azurecr.io/oryx/cli-bullseye:v2
           cache-from: type=registry,src=/tmp/.buildx-cache
