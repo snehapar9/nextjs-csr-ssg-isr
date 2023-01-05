@@ -71,16 +71,16 @@ jobs:
         # Temp fix
         # https://github.com/docker/build-push-action/issues/252
         # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache  
       - uses: actions/checkout@v3
         with:
           repository: microsoft/oryx
           ref: snehapar/Install-deps-dynamically  
       - name: Build application - jamstack-bullseye
-        run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1@sha256:9614941afe5871358356dfffb8b0b15ae1ad049264ee1137b10d4306352e350e oryx build /app
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache      
+        run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1@sha256:9614941afe5871358356dfffb8b0b15ae1ad049264ee1137b10d4306352e350e oryx build /app      
       # - name: Cache NPM dependencies
       #   uses: actions/cache@v3
       #   with:
@@ -88,11 +88,95 @@ jobs:
       #    key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
       #    restore-keys: |
       #     ${{ runner.OS }}-npm-cache-            
-      - name: Oryx build step
-        uses: ./ # Uses an action in the root directory
-        id: oryx-build
+      # - name: Oryx build step
+      #   uses: ./ # Uses an action in the root directory
+      #   id: oryx-build
+      #   with:
+      #     app-location: "/"
+  oryx_cli_build_job:
+    runs-on: ubuntu-latest
+    name: Oryx cli build
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3  
+      - name: Install Azure-cli
+        uses: elstudio/action-install-azure-cli@v1
+      - name: Log into registry
+        uses: azure/login@v1
         with:
-          app-location: "/"
+         creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Log in to Azure Container Registry
+        uses: docker/login-action@v2.0.0
+        with: 
+         registry: jamstacktest.azurecr.io
+         username: ${{ secrets.AZURE_CLIENT_ID }}
+         password: ${{ secrets.AZURE_CLIENT_SECRET }} 
+       # This is a separate action that sets up buildx runner
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1    
+      # - name: Cache docker layers
+      # uses: actions/cache@v2
+      # with:
+      #   path: /tmp/.buildx-cache
+      #   key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #   restore-keys: |
+      #     ${{ runner.os }}-buildx-    
+      # - uses: docker/setup-buildx-action@v1
+      # - uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max 
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # And make it available for builds
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./cli-docker/Dockerfile
+          push: false
+          tags: jamstacktest.azurecr.io/oryx/cli-bullseye:v2
+          cache-from: type=registry,src=/tmp/.buildx-cache
+          cache-to: type=registry,dest=/tmp/.buildx-cache-new
+        # This ugly bit is necessary if you don't want your cache to grow forever
+        # until it hits GitHub's limit of 5GB.
+        # Temp fix
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache  
+      - uses: actions/checkout@v3
+        with:
+          repository: microsoft/oryx
+          ref: snehapar/Install-deps-dynamically  
+      - name: Build application - jamstack-bullseye
+        run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app jamstacktest.azurecr.io/oryx/cli-bullseye:v2 oryx build /app      
+      # - name: Cache NPM dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #    path: tmp
+      #    key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+      #    restore-keys: |
+      #     ${{ runner.OS }}-npm-cache-            
+      # - name: Oryx build step
+      #   uses: ./ # Uses an action in the root directory
+      #   id: oryx-build
+      #   with:
+      #     app-location: "/"    
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
