@@ -64,8 +64,8 @@ jobs:
           context: .
           push: false
           tags: mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=registry,src=/tmp/.buildx-cache
+          cache-to: type=registry,dest=/tmp/.buildx-cache-new
         # This ugly bit is necessary if you don't want your cache to grow forever
         # until it hits GitHub's limit of 5GB.
         # Temp fix
@@ -76,7 +76,7 @@ jobs:
           repository: microsoft/oryx
           ref: snehapar/Install-deps-dynamically  
       - name: Build application - jamstack-bullseye
-        run: docker run --rm -v $(pwd)/tests/SampleApps/${{ matrix.app }}:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1 oryx build /app
+        run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1@sha256:9614941afe5871358356dfffb8b0b15ae1ad049264ee1137b10d4306352e350e oryx build /app
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
