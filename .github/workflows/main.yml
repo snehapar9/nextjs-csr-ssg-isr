@@ -75,6 +75,8 @@ jobs:
       #   run: |
       #     rm -rf /tmp/.buildx-cache
       #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache  
+      - name: Docker image ls
+        run: docker image ls --digests --no-trunc
       - uses: actions/checkout@v3
         with:
           repository: microsoft/oryx
