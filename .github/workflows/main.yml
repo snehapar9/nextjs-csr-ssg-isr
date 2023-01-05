@@ -16,11 +16,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/checkout@v3
-        with:
-          repository: microsoft/oryx
-          ref: snehapar/Install-deps-dynamically  
+        uses: actions/checkout@v3  
       - name: Install Azure-cli
         uses: elstudio/action-install-azure-cli@v1
       - name: Log into registry
@@ -67,7 +63,7 @@ jobs:
         with:
           context: .
           push: false
-          tags: user/app:latest
+          tags: mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
         # This ugly bit is necessary if you don't want your cache to grow forever
@@ -75,6 +71,10 @@ jobs:
         # Temp fix
         # https://github.com/docker/build-push-action/issues/252
         # https://github.com/moby/buildkit/issues/1896
+      - uses: actions/checkout@v3
+        with:
+          repository: microsoft/oryx
+          ref: snehapar/Install-deps-dynamically  
       - name: Build application - jamstack-bullseye
         run: docker run --rm -v $(pwd)/tests/SampleApps/${{ matrix.app }}:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1 oryx build /app
       - name: Move cache
