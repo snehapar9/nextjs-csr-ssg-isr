@@ -45,13 +45,13 @@ jobs:
       #     context: .
       #     cache-from: type=gha
       #     cache-to: type=gha,mode=max 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
       # - name: Login to DockerHub
       #   uses: docker/login-action@v1
       #   with:
@@ -59,13 +59,13 @@ jobs:
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       # And make it available for builds
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: false
           tags: mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1
-          cache-from: type=registry,src=/tmp/.buildx-cache
-          cache-to: type=registry,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         # This ugly bit is necessary if you don't want your cache to grow forever
         # until it hits GitHub's limit of 5GB.
         # Temp fix
@@ -129,13 +129,13 @@ jobs:
       #     context: .
       #     cache-from: type=gha
       #     cache-to: type=gha,mode=max 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
       # - name: Login to DockerHub
       #   uses: docker/login-action@v1
       #   with:
@@ -143,13 +143,13 @@ jobs:
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       # And make it available for builds
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./cli-docker
           push: false
           tags: jamstacktest.azurecr.io/oryx/cli-bullseye:v2
-          cache-from: type=registry,src=/tmp/.buildx-cache
-          cache-to: type=registry,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         # This ugly bit is necessary if you don't want your cache to grow forever
         # until it hits GitHub's limit of 5GB.
         # Temp fix
