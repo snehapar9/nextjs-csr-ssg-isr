@@ -175,12 +175,12 @@ jobs:
       #   run: |
       #     rm -rf /tmp/.buildx-cache
       #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache  
-      - uses: actions/checkout@v3
-        with:
-          repository: microsoft/oryx
-          ref: snehapar/Install-deps-dynamically  
-      - name: Build application - jamstack-bullseye
-        run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app jamstacktest.azurecr.io/oryx/cli-bullseye:v2@sha256:04f16cdb45cc6e8fc40fbb94cc61bfa04689cacc713170500b68f3cae983997a oryx build /app      
+      # - uses: actions/checkout@v3
+      #   with:
+      #     repository: microsoft/oryx
+      #     ref: snehapar/Install-deps-dynamically  
+      # - name: Build application - jamstack-bullseye
+      #   run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app jamstacktest.azurecr.io/oryx/cli-bullseye:v2@sha256:04f16cdb45cc6e8fc40fbb94cc61bfa04689cacc713170500b68f3cae983997a oryx build /app      
       # - name: Cache NPM dependencies
       #   uses: actions/cache@v3
       #   with:
