@@ -188,11 +188,11 @@ jobs:
       #    key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
       #    restore-keys: |
       #     ${{ runner.OS }}-npm-cache-            
-      # - name: Oryx build step
-      #   uses: ./ # Uses an action in the root directory
-      #   id: oryx-build
-      #   with:
-      #     app-location: "/"    
+      - name: Oryx build step
+        uses: ./ # Uses an action in the root directory
+        id: oryx-build
+        with:
+          app-location: "/"    
   Deploy-preview-Vercel:
     runs-on: ubuntu-latest
     name: Deploy to Vercel
