@@ -89,12 +89,12 @@ jobs:
           app-location: "/"
       - name: Docker image ls
         run: docker image ls --digests --no-trunc
-      - uses: actions/checkout@v3
-        with:
-          repository: microsoft/oryx
-          ref: snehapar/Install-deps-dynamically  
-      - name: Build application - jamstack-bullseye
-        run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1@sha256:9614941afe5871358356dfffb8b0b15ae1ad049264ee1137b10d4306352e350e oryx build /app      
+      # - uses: actions/checkout@v3
+      #   with:
+      #     repository: microsoft/oryx
+      #     ref: snehapar/Install-deps-dynamically  
+      # - name: Build application - jamstack-bullseye
+      #   run: docker run --rm -v $(pwd)/tests/SampleApps/nodejs/angular14app:/app mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1@sha256:9614941afe5871358356dfffb8b0b15ae1ad049264ee1137b10d4306352e350e oryx build /app      
       # - name: Cache NPM dependencies
       #   uses: actions/cache@v3
       #   with:
