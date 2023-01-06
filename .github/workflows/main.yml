@@ -81,7 +81,9 @@ jobs:
       # - name: Move cache
       #   run: |
       #     rm -rf /tmp/.buildx-cache
-      #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache  
+      #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache 
+      - name: Docker image ls
+        run: docker image ls --digests --no-trunc 
       - name: Oryx build step
         uses: ./ # Uses an action in the root directory
         id: oryx-build
