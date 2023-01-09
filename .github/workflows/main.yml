@@ -80,7 +80,7 @@ jobs:
           tags: jamstacktest.azurecr.io/oryx/build:azfunc-jamstack-debian-bullseye-Install-libedit
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          load: true
+          # load: true
         # This ugly bit is necessary if you don't want your cache to grow forever
         # until it hits GitHub's limit of 5GB.
         # Temp fix
