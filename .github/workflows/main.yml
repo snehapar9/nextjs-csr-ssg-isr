@@ -145,6 +145,7 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max 
+          load: true
       # - name: Cache Docker layers
       #   uses: actions/cache@v2
       #   with:
