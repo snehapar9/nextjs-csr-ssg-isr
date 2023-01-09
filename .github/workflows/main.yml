@@ -41,7 +41,16 @@ jobs:
          restore-keys: |
           ${{ runner.os }}-buildx-    
       - name: Docker image ls
-        run: docker image ls --digests --no-trunc    
+        run: docker image ls --digests --no-trunc   
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+         path: |
+           .npm
+           node_modules
+         key: ${{ runner.OS }}-npm2-cache-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+          ${{ runner.OS }}-npm2-cache-   
       # # - uses: docker/setup-buildx-action@v1
       # - name: Docker build and push
       #   if: steps.cache.outputs.cache-hit != 'true'
@@ -64,12 +73,11 @@ jobs:
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       # And make it available for builds
       - name: Build and push
-        if: steps.cache.outputs.cache-hit != 'true'
         uses: docker/build-push-action@v3
         with:
           context: .
           push: false
-          tags: mcr.microsoft.com/oryx/build:azfunc-jamstack-debian-bullseye-20221214.1
+          tags: jamstacktest.azurecr.io/oryx/build:azfunc-jamstack-debian-bullseye-Install-libedit
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
