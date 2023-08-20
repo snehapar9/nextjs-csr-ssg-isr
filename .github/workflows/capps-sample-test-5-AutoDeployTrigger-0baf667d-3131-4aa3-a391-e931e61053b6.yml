@@ -1,0 +1,42 @@
+name: Trigger auto deployment for capps-sample-test-5
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/capps-sample-test-5-AutoDeployTrigger-0baf667d-3131-4aa3-a391-e931e61053b6.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.CAPPSSAMPLETEST5_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: snehaparacr.azurecr.io
+          registryUsername: ${{ secrets.CAPPSSAMPLETEST5_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CAPPSSAMPLETEST5_REGISTRY_PASSWORD }}
+          containerAppName: capps-sample-test-5
+          resourceGroup: ca-snehapar-group
+          imageToBuild: snehaparacr.azurecr.io/capps-sample-test-5:${{ github.sha }}
+          
+
+     
+
