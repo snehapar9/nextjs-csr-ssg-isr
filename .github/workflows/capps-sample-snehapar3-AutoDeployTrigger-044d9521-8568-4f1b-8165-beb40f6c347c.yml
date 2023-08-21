@@ -1,0 +1,42 @@
+name: Trigger auto deployment for capps-sample-snehapar3
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/capps-sample-snehapar3-AutoDeployTrigger-044d9521-8568-4f1b-8165-beb40f6c347c.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.CAPPSSAMPLESNEHAPAR3_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: snehaparacr.azurecr.io
+          registryUsername: ${{ secrets.CAPPSSAMPLESNEHAPAR3_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CAPPSSAMPLESNEHAPAR3_REGISTRY_PASSWORD }}
+          containerAppName: capps-sample-snehapar3
+          resourceGroup: ca-snehapar-group
+          imageToBuild: snehaparacr.azurecr.io/capps-sample-snehapar3:${{ github.sha }}
+          
+
+     
+
